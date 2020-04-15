@@ -7,34 +7,35 @@ Doc2Vec Model
 Introduces Gensim's Doc2Vec model and demonstrates its use on the Lee Corpus.
 
 """
-# IPlist = ["H01", "H04", "G06", "A61", "B60", "G01", "F16", "A47", "G02", "B65", "H02", "C07", "H05", "G11", "C08",
-#           "B01", "A01", "G09", "A23", "F24", "C09", "E04", "G03", "B29", "C12", "B62", "H03", "B23", "F21", "A63",
-#           "F25", "F02", "E02", "G08", "D06", "C02", "A45", "B32", "E05", "C23", "E01", "B63", "F01", "F04", "B21",
-#           "G05", "B05", "C01", "B41", "B25", "E03", "C04", "C22", "B66", "G07", "F23", "E06", "A41", "G10", "B22",
-#           "C21", "B24", "C10", "A43", "C03", "B82", "F28", "B08", "A44", "B26", "F03", "D01", "A62", "B42", "C25",
-#           "G16", "B09", "B43", "D04", "F27", "C11", "B02", "B28", "F17", "F26", "E21", "A46", "G21", "B61", "B44",
-#           "D21", "B64", "D03", "A24", "F41", "B30", "B67", "D02", "F15", "G04", "C05", "A21", "A42", "B07", "B27",
-#           "C30", "B03", "D05", "F42", "F22", "B31", "B04", "B33", "A22", "B81", "B06", "D07", "B68", "C14", "C06",
-#           "G12", "C40", "C13", "G99", "F99"]
-#
-# ipclist = []
-# with open("IPlist.txt", "r", encoding="utf-8") as fp:
-#     for string in fp:
-#         ipclist.append(string[:-1].split(" "))
-#
-# pclist = []
-# for doc in ipclist:
-#     if len(doc) > 1:
-#         buf = []
-#         for wrd in doc:
-#             if wrd in IPlist:
-#                 buf.append(IPlist.index(wrd))
-#         if buf == []:
-#             pclist.append("NONE")
-#         else:
-#             pclist.append(IPlist[min(buf)])
-#     else:
-#         pclist.append(doc[0])
+IPlist = ["H01", "H04", "G06", "A61", "B60", "G01", "F16", "A47", "G02", "B65", "H02", "C07", "H05", "G11", "C08",
+          "B01", "A01", "G09", "A23", "F24", "C09", "E04", "G03", "B29", "C12", "B62", "H03", "B23", "F21", "A63",
+          "F25", "F02", "E02", "G08", "D06", "C02", "A45", "B32", "E05", "C23", "E01", "B63", "F01", "F04", "B21",
+          "G05", "B05", "C01", "B41", "B25", "E03", "C04", "C22", "B66", "G07", "F23", "E06", "A41", "G10", "B22",
+          "C21", "B24", "C10", "A43", "C03", "B82", "F28", "B08", "A44", "B26", "F03", "D01", "A62", "B42", "C25",
+          "G16", "B09", "B43", "D04", "F27", "C11", "B02", "B28", "F17", "F26", "E21", "A46", "G21", "B61", "B44",
+          "D21", "B64", "D03", "A24", "F41", "B30", "B67", "D02", "F15", "G04", "C05", "A21", "A42", "B07", "B27",
+          "C30", "B03", "D05", "F42", "F22", "B31", "B04", "B33", "A22", "B81", "B06", "D07", "B68", "C14", "C06",
+          "G12", "C40", "C13", "G99", "F99"]
+
+ipclist = []
+with open("IPlist.txt", "r", encoding="utf-8") as fp:
+    for string in fp:
+        ipclist.append(string[:-1].split(" "))
+
+pclist = []
+for doc in ipclist:
+    if len(doc) > 1:
+        buf = []
+        for wrd in doc:
+            if wrd in IPlist:
+                buf.append(IPlist.index(wrd))
+        if buf == []:
+            pclist.append("NONE")
+        else:
+            pclist.append(IPlist[min(buf)])
+    else:
+        pclist.append(doc[0])
+        
 import pickle
 import gzip
 f1 = gzip.open("CPC[카].pickle", 'rb')
@@ -44,121 +45,7 @@ f1.close()
 import logging
 logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
 
-###############################################################################
-# Doc2Vec is a :ref:`core_concepts_model` that represents each
-# :ref:`core_concepts_document` as a :ref:`core_concepts_vector`.  This
-# tutorial introduces the model and demonstrates how to train and assess it.
-#
-# Here's a list of what we'll be doing:
-#
-# 0. Review the relevant models: bag-of-words, Word2Vec, Doc2Vec
-# 1. Load and preprocess the training and test corpora (see :ref:`core_concepts_corpus`)
-# 2. Train a Doc2Vec :ref:`core_concepts_model` model using the training corpus
-# 3. Demonstrate how the trained model can be used to infer a :ref:`core_concepts_vector`
-# 4. Assess the model
-# 5. Test the model on the test corpus
-#
-# Review: Bag-of-words
-# --------------------
-#
-# .. Note:: Feel free to skip these review sections if you're already familiar with the models.
-#
-# You may be familiar with the `bag-of-words model
-# <https://en.wikipedia.org/wiki/Bag-of-words_model>`_ from the
-# :ref:`core_concepts_vector` section.
-# This model transforms each document to a fixed-length vector of integers.
-# For example, given the sentences:
-#
-# - ``John likes to watch movies. Mary likes movies too.``
-# - ``John also likes to watch football games. Mary hates football.``
-#
-# The model outputs the vectors:
-#
-# - ``[1, 2, 1, 1, 2, 1, 1, 0, 0, 0, 0]``
-# - ``[1, 1, 1, 1, 0, 1, 0, 1, 2, 1, 1]``
-#
-# Each vector has 10 elements, where each element counts the number of times a
-# particular word occurred in the document.
-# The order of elements is arbitrary.
-# In the example above, the order of the elements corresponds to the words:
-# ``["John", "likes", "to", "watch", "movies", "Mary", "too", "also", "football", "games", "hates"]``.
-#
-# Bag-of-words models are surprisingly effective, but have several weaknesses.
-#
-# First, they lose all information about word order: "John likes Mary" and
-# "Mary likes John" correspond to identical vectors. There is a solution: bag
-# of `n-grams <https://en.wikipedia.org/wiki/N-gram>`__
-# models consider word phrases of length n to represent documents as
-# fixed-length vectors to capture local word order but suffer from data
-# sparsity and high dimensionality.
-#
-# Second, the model does not attempt to learn the meaning of the underlying
-# words, and as a consequence, the distance between vectors doesn't always
-# reflect the difference in meaning.  The ``Word2Vec`` model addresses this
-# second problem.
-#
-# Review: ``Word2Vec`` Model
-# --------------------------
-#
-# ``Word2Vec`` is a more recent model that embeds words in a lower-dimensional
-# vector space using a shallow neural network. The result is a set of
-# word-vectors where vectors close together in vector space have similar
-# meanings based on context, and word-vectors distant to each other have
-# differing meanings. For example, ``strong`` and ``powerful`` would be close
-# together and ``strong`` and ``Paris`` would be relatively far.
-#
-# Gensim's :py:class:`~gensim.models.word2vec.Word2Vec` class implements this model.
-#
-# With the ``Word2Vec`` model, we can calculate the vectors for each **word** in a document.
-# But what if we want to calculate a vector for the **entire document**\ ?
-# We could average the vectors for each word in the document - while this is quick and crude, it can often be useful.
-# However, there is a better way...
-#
-# Introducing: Paragraph Vector
-# -----------------------------
-#
-# .. Important:: In Gensim, we refer to the Paragraph Vector model as ``Doc2Vec``.
-#
-# Le and Mikolov in 2014 introduced the `Doc2Vec algorithm <https://cs.stanford.edu/~quocle/paragraph_vector.pdf>`__, which usually outperforms such simple-averaging of ``Word2Vec`` vectors.
-#
-# The basic idea is: act as if a document has another floating word-like
-# vector, which contributes to all training predictions, and is updated like
-# other word-vectors, but we will call it a doc-vector. Gensim's
-# :py:class:`~gensim.models.doc2vec.Doc2Vec` class implements this algorithm.
-#
-# There are two implementations:
-#
-# 1. Paragraph Vector - Distributed Memory (PV-DM)
-# 2. Paragraph Vector - Distributed Bag of Words (PV-DBOW)
-#
-# .. Important::
-#   Don't let the implementation details below scare you.
-#   They're advanced material: if it's too much, then move on to the next section.
-#
-# PV-DM is analogous to Word2Vec CBOW. The doc-vectors are obtained by training
-# a neural network on the synthetic task of predicting a center word based an
-# average of both context word-vectors and the full document's doc-vector.
-#
-# PV-DBOW is analogous to Word2Vec SG. The doc-vectors are obtained by training
-# a neural network on the synthetic task of predicting a target word just from
-# the full document's doc-vector. (It is also common to combine this with
-# skip-gram testing, using both the doc-vector and nearby word-vectors to
-# predict a single target word, but only one at a time.)
-#
-# Prepare the Training and Test Data
-# ----------------------------------
-#
-# For this tutorial, we'll be training our model using the `Lee Background
-# Corpus
-# <https://hekyll.services.adelaide.edu.au/dspace/bitstream/2440/28910/1/hdl_28910.pdf>`_
-# included in gensim. This corpus contains 314 documents selected from the
-# Australian Broadcasting Corporation’s news mail service, which provides text
-# e-mails of headline stories and covers a number of broad topics.
-#
-# And we'll test our model by eye using the much shorter `Lee Corpus
-# <https://hekyll.services.adelaide.edu.au/dspace/bitstream/2440/28910/1/hdl_28910.pdf>`_
-# which contains 50 documents.
-#
+
 
 import os
 import gensim
@@ -184,7 +71,8 @@ lee_test_file = os.path.join(test_data_dir, 'lee.cor')
 #   To train the model, we'll need to associate a tag/number with each document
 #   of the training corpus. In our case, the tag is simply the zero-based line
 #   number.
-#
+
+
 import smart_open
 
 def read_corpus(fname, tokens_only=False):
@@ -219,21 +107,7 @@ print(test_corpus[:2])
 
 ###############################################################################
 # Training the Model
-# ------------------
-#
-# Now, we'll instantiate a Doc2Vec model with a vector size with 50 dimensions and
-# iterating over the training corpus 40 times. We set the minimum word count to
-# 2 in order to discard words with very few occurrences. (Without a variety of
-# representative examples, retaining such infrequent words can often make a
-# model worse!) Typical iteration counts in the published `Paragraph Vector paper <https://cs.stanford.edu/~quocle/paragraph_vector.pdf>`__
-# results, using 10s-of-thousands to millions of docs, are 10-20. More
-# iterations take more time and eventually reach a point of diminishing
-# returns.
-#
-# However, this is a very very small dataset (300 documents) with shortish
-# documents (a few hundred words). Adding training passes can sometimes help
-# with such small datasets.
-#
+
 model = gensim.models.doc2vec.Doc2Vec(vector_size=300, min_count=2, epochs=40, workers=14)
 # model = gensim.models.doc2vec.Doc2Vec.load("doc2vec[나].model")
 
@@ -255,140 +129,140 @@ model.build_vocab(train_corpus)
 # minutes, so use BLAS if you value your time.
 #
 
-#
-# f21=open("epochTEST.txt", 'w', encoding="utf-8")
-#
-# import collections
-#
-#
-# f1 = gzip.open("NTESTSET[C1].pickle", 'rb')
-# blst = pickle.load(f1)
-# f1.close()
-#
-# import re
-# import xlrd
-#
-# def lodC():
-#     workbook = xlrd.open_workbook('C:/Users/User/PycharmProjects/patent\\testset3.xls')
-#     worksheet = workbook.sheet_by_index(0)
-#     nrows = worksheet.nrows
-#     clst=[]
-#     ipst = []
-#     ipst2 = []
-#     ipst3 = []
-#     ipst4 = []
-#     for row_num in range(nrows):
-#         ipst1 = []
-#         tdic=dict()
-#         tdic2=dict()
-#         tdic3 = dict()
-#         # clst.append(worksheet.cell_value(row_num, 4))
-#         buf=worksheet.cell_value(row_num, 2)
-#         buf2=re.sub("\([\d.]+\)","",buf) #G06F 40/20(2020.01)|G06N 3/08(2006.01)
-#         buf4=re.sub(" ", "",buf2)
-#         buf7=buf4.split("|")
-#         ipst4.append(buf7)
-#         buf4=re.sub("\/[^|]+","",buf4)
-#         buf5=buf4.split("|")
-#         for itm3 in buf5:
-#             if itm3 in tdic3:
-#                 tdic3[itm3]=tdic3[itm3]+1
-#             else:
-#                 tdic3[itm3]=1
-#         buf6 = list(tdic3.keys())
-#         ipst3.append(buf6)
-#         buf3=buf2.split("|")
-#         for itm in buf3:
-#             ipst1.append(itm[:4])
-#         for itm1 in ipst1:
-#             if itm1 in tdic:
-#                 tdic[itm1]=tdic[itm1]+1
-#             else:
-#                 tdic[itm1]=1
-#         buf=list(tdic.keys())
-#         ipst.append(buf)
-#         for itm2 in buf:
-#             if itm2[:3] in tdic:
-#                 tdic2[itm2[:3]]=tdic2[itm2[:3]]+1
-#             else:
-#                 tdic2[itm2[:3]]=1
-#         buf2 = list(tdic2.keys())
-#         ipst2.append(buf2)
-#     # blst=[]
-#     # c=0
-#     # for doc in clst:
-#     #     print(c)
-#     #     c=c+1
-#     #     blst.append(trans2(doc))
-#     return ipst,ipst2, ipst3, ipst4
-#
-# ipst, ipst2, ipst3, ipst4=lodC()
-#
-# def test():
-#     tlist1= []
-#     tlist2 = []
-#     tlist3 = []
-#     for i in range(len(blst)):
-#         a=model.docvecs.most_similar([model.infer_vector(blst[i])], topn=1000)
-#         tdic1 = dict()
-#         tdic2 = dict()
-#         tdic3 = dict()
-#         for lst1 in a:
-#             if len(tdic1) < 10:
-#                 tdic1[lst1[0][:3]] = 0
-#             if len(tdic2) < 10:
-#                 tdic2[lst1[0][:4]] = 0
-#             if len(tdic3) < 10:
-#                 temp = re.sub("\/[\s\S]+", "", lst1[0])
-#                 tdic3[temp] = 0
-#             if len(tdic1) == 10 and len(tdic2) == 10 and len(tdic3) == 10:
-#                 break
-#         b1= list(tdic1.keys())
-#         b2 = list(tdic2.keys())
-#         b3 = list(tdic3.keys())
-#         hit_flag=False
-#         for wrd in b1:
-#             if wrd in ipst2[i] :
-#                 hit_flag = True
-#                 break
-#         tlist1.append(hit_flag)
-#         hit_flag = False
-#         for wrd in b2:
-#             if wrd in ipst[i] :
-#                 hit_flag = True
-#                 break
-#         tlist2.append(hit_flag)
-#         hit_flag = False
-#         for wrd in b3:
-#             if wrd in ipst3[i] :
-#                 hit_flag = True
-#                 break
-#         tlist3.append(hit_flag)
-#     counter1 = collections.Counter(tlist1)
-#     counter2 = collections.Counter(tlist2)
-#     counter3 = collections.Counter(tlist3)
-#     ct1=counter1[True]
-#     ct2=counter2[True]
-#     ct3=counter3[True]
-#     return ct1, ct2, ct3
-# fs=[]
-# for num in range(5):
-#     model.train(train_corpus, total_examples=model.corpus_count, epochs=2)
-#     ep=str((num+1)*2)
-#     pi = "Test[" + ep + "].model"
-#     model.save(pi)
-#     model = gensim.models.doc2vec.Doc2Vec.load(pi)
-#     r1, r2, r3= test()
-#     pick = "Test[" + ep + "].txt"
-#     with open(pick, 'w', encoding="utf-8") as g1:
-#         g1.write(ep)
-#         g1.write("\t")
-#         g1.write(str(r1))
-#         g1.write("\t")
-#         g1.write(str(r2))
-#         g1.write("\t")
-#         g1.write(str(r3))
-#         g1.write("\n")
+
+f21=open("epochTEST.txt", 'w', encoding="utf-8")
+
+import collections
+
+
+f1 = gzip.open("NTESTSET[C1].pickle", 'rb')
+blst = pickle.load(f1)
+f1.close()
+
+import re
+import xlrd
+
+def lodC():
+    workbook = xlrd.open_workbook('C:/Users/User/PycharmProjects/patent\\testset3.xls')
+    worksheet = workbook.sheet_by_index(0)
+    nrows = worksheet.nrows
+    clst=[]
+    ipst = []
+    ipst2 = []
+    ipst3 = []
+    ipst4 = []
+    for row_num in range(nrows):
+        ipst1 = []
+        tdic=dict()
+        tdic2=dict()
+        tdic3 = dict()
+        # clst.append(worksheet.cell_value(row_num, 4))
+        buf=worksheet.cell_value(row_num, 2)
+        buf2=re.sub("\([\d.]+\)","",buf) #G06F 40/20(2020.01)|G06N 3/08(2006.01)
+        buf4=re.sub(" ", "",buf2)
+        buf7=buf4.split("|")
+        ipst4.append(buf7)
+        buf4=re.sub("\/[^|]+","",buf4)
+        buf5=buf4.split("|")
+        for itm3 in buf5:
+            if itm3 in tdic3:
+                tdic3[itm3]=tdic3[itm3]+1
+            else:
+                tdic3[itm3]=1
+        buf6 = list(tdic3.keys())
+        ipst3.append(buf6)
+        buf3=buf2.split("|")
+        for itm in buf3:
+            ipst1.append(itm[:4])
+        for itm1 in ipst1:
+            if itm1 in tdic:
+                tdic[itm1]=tdic[itm1]+1
+            else:
+                tdic[itm1]=1
+        buf=list(tdic.keys())
+        ipst.append(buf)
+        for itm2 in buf:
+            if itm2[:3] in tdic:
+                tdic2[itm2[:3]]=tdic2[itm2[:3]]+1
+            else:
+                tdic2[itm2[:3]]=1
+        buf2 = list(tdic2.keys())
+        ipst2.append(buf2)
+    # blst=[]
+    # c=0
+    # for doc in clst:
+    #     print(c)
+    #     c=c+1
+    #     blst.append(trans2(doc))
+    return ipst,ipst2, ipst3, ipst4
+
+ipst, ipst2, ipst3, ipst4=lodC()
+
+def test():
+    tlist1= []
+    tlist2 = []
+    tlist3 = []
+    for i in range(len(blst)):
+        a=model.docvecs.most_similar([model.infer_vector(blst[i])], topn=1000)
+        tdic1 = dict()
+        tdic2 = dict()
+        tdic3 = dict()
+        for lst1 in a:
+            if len(tdic1) < 10:
+                tdic1[lst1[0][:3]] = 0
+            if len(tdic2) < 10:
+                tdic2[lst1[0][:4]] = 0
+            if len(tdic3) < 10:
+                temp = re.sub("\/[\s\S]+", "", lst1[0])
+                tdic3[temp] = 0
+            if len(tdic1) == 10 and len(tdic2) == 10 and len(tdic3) == 10:
+                break
+        b1= list(tdic1.keys())
+        b2 = list(tdic2.keys())
+        b3 = list(tdic3.keys())
+        hit_flag=False
+        for wrd in b1:
+            if wrd in ipst2[i] :
+                hit_flag = True
+                break
+        tlist1.append(hit_flag)
+        hit_flag = False
+        for wrd in b2:
+            if wrd in ipst[i] :
+                hit_flag = True
+                break
+        tlist2.append(hit_flag)
+        hit_flag = False
+        for wrd in b3:
+            if wrd in ipst3[i] :
+                hit_flag = True
+                break
+        tlist3.append(hit_flag)
+    counter1 = collections.Counter(tlist1)
+    counter2 = collections.Counter(tlist2)
+    counter3 = collections.Counter(tlist3)
+    ct1=counter1[True]
+    ct2=counter2[True]
+    ct3=counter3[True]
+    return ct1, ct2, ct3
+fs=[]
+for num in range(5):
+    model.train(train_corpus, total_examples=model.corpus_count, epochs=2)
+    ep=str((num+1)*2)
+    pi = "Test[" + ep + "].model"
+    model.save(pi)
+    model = gensim.models.doc2vec.Doc2Vec.load(pi)
+    r1, r2, r3= test()
+    pick = "Test[" + ep + "].txt"
+    with open(pick, 'w', encoding="utf-8") as g1:
+        g1.write(ep)
+        g1.write("\t")
+        g1.write(str(r1))
+        g1.write("\t")
+        g1.write(str(r2))
+        g1.write("\t")
+        g1.write(str(r3))
+        g1.write("\n")
 
 model.train(train_corpus, total_examples=model.corpus_count, epochs=model.epochs)
 
@@ -412,187 +286,65 @@ model.save("doc2vec[하].model")
 
 
 
-# f1 = gzip.open("NTESTSET[C1].pickle", 'rb')
-# blst = pickle.load(f1)
-# f1.close()
-# import csv
-# import re
-# import xlrd
-# def lodC():
-#     workbook = xlrd.open_workbook('C:/Users/User/PycharmProjects/patent\\testset3.xls')
-#     worksheet = workbook.sheet_by_index(0)
-#     nrows = worksheet.nrows
-#     clst=[]
-#     ipst = []
-#     ipst2 = []
-#     ipst3 = []
-#     ipst4 = []
-#     for row_num in range(nrows):
-#         ipst1 = []
-#         tdic=dict()
-#         tdic2=dict()
-#         tdic3 = dict()
-#         # clst.append(worksheet.cell_value(row_num, 4))
-#         buf=worksheet.cell_value(row_num, 4)
-#         buf2=re.sub("\([\d.]+\)","",buf) #G06F 40/20(2020.01)|G06N 3/08(2006.01)
-#         buf4=re.sub(" ", "",buf2)
-#         buf7=buf4.split("|")
-#         ipst4.append(buf7)
-#         buf4=re.sub("\/[^|]+","",buf4)
-#         buf5=buf4.split("|")
-#         for itm3 in buf5:
-#             if itm3 in tdic3:
-#                 tdic3[itm3]=tdic3[itm3]+1
-#             else:
-#                 tdic3[itm3]=1
-#         buf6 = list(tdic3.keys())
-#         ipst3.append(buf6)
-#         buf3=buf2.split("|")
-#         for itm in buf3:
-#             ipst1.append(itm[:4])
-#         for itm1 in ipst1:
-#             if itm1 in tdic:
-#                 tdic[itm1]=tdic[itm1]+1
-#             else:
-#                 tdic[itm1]=1
-#         buf=list(tdic.keys())
-#         ipst.append(buf)
-#         for itm2 in buf:
-#             if itm2[:3] in tdic:
-#                 tdic2[itm2[:3]]=tdic2[itm2[:3]]+1
-#             else:
-#                 tdic2[itm2[:3]]=1
-#         buf2 = list(tdic2.keys())
-#         ipst2.append(buf2)
-#     # blst=[]
-#     # c=0
-#     # for doc in clst:
-#     #     print(c)
-#     #     c=c+1
-#     #     blst.append(trans2(doc))
-#     return ipst,ipst2, ipst3, ipst4
-# ipst, ipst2, ipst3, ipst4=lodC()
+f1 = gzip.open("NTESTSET[C1].pickle", 'rb')
+blst = pickle.load(f1)
+f1.close()
+import csv
+import re
+import xlrd
+def lodC():
+    workbook = xlrd.open_workbook('C:/Users/User/PycharmProjects/patent\\testset3.xls')
+    worksheet = workbook.sheet_by_index(0)
+    nrows = worksheet.nrows
+    clst=[]
+    ipst = []
+    ipst2 = []
+    ipst3 = []
+    ipst4 = []
+    for row_num in range(nrows):
+        ipst1 = []
+        tdic=dict()
+        tdic2=dict()
+        tdic3 = dict()
+        # clst.append(worksheet.cell_value(row_num, 4))
+        buf=worksheet.cell_value(row_num, 4)
+        buf2=re.sub("\([\d.]+\)","",buf) #G06F 40/20(2020.01)|G06N 3/08(2006.01)
+        buf4=re.sub(" ", "",buf2)
+        buf7=buf4.split("|")
+        ipst4.append(buf7)
+        buf4=re.sub("\/[^|]+","",buf4)
+        buf5=buf4.split("|")
+        for itm3 in buf5:
+            if itm3 in tdic3:
+                tdic3[itm3]=tdic3[itm3]+1
+            else:
+                tdic3[itm3]=1
+        buf6 = list(tdic3.keys())
+        ipst3.append(buf6)
+        buf3=buf2.split("|")
+        for itm in buf3:
+            ipst1.append(itm[:4])
+        for itm1 in ipst1:
+            if itm1 in tdic:
+                tdic[itm1]=tdic[itm1]+1
+            else:
+                tdic[itm1]=1
+        buf=list(tdic.keys())
+        ipst.append(buf)
+        for itm2 in buf:
+            if itm2[:3] in tdic:
+                tdic2[itm2[:3]]=tdic2[itm2[:3]]+1
+            else:
+                tdic2[itm2[:3]]=1
+        buf2 = list(tdic2.keys())
+        ipst2.append(buf2)
+    # blst=[]
+    # c=0
+    # for doc in clst:
+    #     print(c)
+    #     c=c+1
+    #     blst.append(trans2(doc))
+    return ipst,ipst2, ipst3, ipst4
+ipst, ipst2, ipst3, ipst4=lodC()
 
 
-# Note that ``infer_vector()`` does *not* take a string, but rather a list of
-# string tokens, which should have already been tokenized the same way as the
-# ``words`` property of original training document objects.
-#
-# Also note that because the underlying training/inference algorithms are an
-# iterative approximation problem that makes use of internal randomization,
-# repeated inferences of the same text will return slightly different vectors.
-#
-#
-# ###############################################################################
-# # Assessing the Model
-# # -------------------
-# #
-# # To assess our new model, we'll first infer new vectors for each document of
-# # the training corpus, compare the inferred vectors with the training corpus,
-# # and then returning the rank of the document based on self-similarity.
-# # Basically, we're pretending as if the training corpus is some new unseen data
-# # and then seeing how they compare with the trained model. The expectation is
-# # that we've likely overfit our model (i.e., all of the ranks will be less than
-# # 2) and so we should be able to find similar documents very easily.
-# # Additionally, we'll keep track of the second ranks for a comparison of less
-# # similar documents.
-# #
-# ranks = []
-# second_ranks = []
-# for doc_id in range(len(train_corpus)):
-#     inferred_vector = model.infer_vector(train_corpus[doc_id].words)
-#     sims = model.docvecs.most_similar([inferred_vector], topn=len(model.docvecs))
-#     rank = [docid for docid, sim in sims].index(doc_id)
-#     ranks.append(rank)
-#
-#     second_ranks.append(sims[1])
-#
-# ###############################################################################
-# # Let's count how each document ranks with respect to the training corpus
-# #
-# # NB. Results vary between runs due to random seeding and very small corpus
-# import collections
-#
-# counter = collections.Counter(ranks)
-# print(counter)
-#
-# ###############################################################################
-# # Basically, greater than 95% of the inferred documents are found to be most
-# # similar to itself and about 5% of the time it is mistakenly most similar to
-# # another document. Checking the inferred-vector against a
-# # training-vector is a sort of 'sanity check' as to whether the model is
-# # behaving in a usefully consistent manner, though not a real 'accuracy' value.
-# #
-# # This is great and not entirely surprising. We can take a look at an example:
-# #
-# print('Document ({}): «{}»\n'.format(doc_id, ' '.join(train_corpus[doc_id].words)))
-# print(u'SIMILAR/DISSIMILAR DOCS PER MODEL %s:\n' % model)
-# for label, index in [('MOST', 0), ('SECOND-MOST', 1), ('MEDIAN', len(sims)//2), ('LEAST', len(sims) - 1)]:
-#     print(u'%s %s: «%s»\n' % (label, sims[index], ' '.join(train_corpus[sims[index][0]].words)))
-#
-# ###############################################################################
-# # Notice above that the most similar document (usually the same text) is has a
-# # similarity score approaching 1.0. However, the similarity score for the
-# # second-ranked documents should be significantly lower (assuming the documents
-# # are in fact different) and the reasoning becomes obvious when we examine the
-# # text itself.
-# #
-# # We can run the next cell repeatedly to see a sampling other target-document
-# # comparisons.
-# #
-# #
-# # # Pick a random document from the corpus and infer a vector from the model
-# import random
-# doc_id = random.randint(0, len(train_corpus) - 1)
-# #
-# # # Compare and print the second-most-similar document
-# # print('Train Document ({}): «{}»\n'.format(doc_id, ' '.join(train_corpus[doc_id].words)))
-# # sim_id = second_ranks[doc_id]
-# # print('Similar Document {}: «{}»\n'.format(sim_id, ' '.join(train_corpus[sim_id[0]].words)))
-# #
-# # ###############################################################################
-# # # Testing the Model
-# # # -----------------
-# # #
-# # # Using the same approach above, we'll infer the vector for a randomly chosen
-# # # test document, and compare the document to our model by eye.
-# # #
-# #
-# # # Pick a random document from the test corpus and infer a vector from the model
-# # doc_id = random.randint(0, len(test_corpus) - 1)
-# # inferred_vector = model.infer_vector(test_corpus[doc_id])
-# # sims = model.docvecs.most_similar([inferred_vector], topn=len(model.docvecs))
-# #
-# # # Compare and print the most/median/least similar documents from the train corpus
-# # print('Test Document ({}): «{}»\n'.format(doc_id, ' '.join(test_corpus[doc_id])))
-# # print(u'SIMILAR/DISSIMILAR DOCS PER MODEL %s:\n' % model)
-# # for label, index in [('MOST', 0), ('MEDIAN', len(sims)//2), ('LEAST', len(sims) - 1)]:
-# #     print(u'%s %s: «%s»\n' % (label, sims[index], ' '.join(train_corpus[sims[index][0]].words)))
-# #
-# # ###############################################################################
-# # # Conclusion
-# # # ----------
-# # #
-# # # Let's review what we've seen in this tutorial:
-# # #
-# # # 0. Review the relevant models: bag-of-words, Word2Vec, Doc2Vec
-# # # 1. Load and preprocess the training and test corpora (see :ref:`core_concepts_corpus`)
-# # # 2. Train a Doc2Vec :ref:`core_concepts_model` model using the training corpus
-# # # 3. Demonstrate how the trained model can be used to infer a :ref:`core_concepts_vector`
-# # # 4. Assess the model
-# # # 5. Test the model on the test corpus
-# # #
-# # # That's it! Doc2Vec is a great way to explore relationships between documents.
-# # #
-# # # Additional Resources
-# # # --------------------
-# # #
-# # # If you'd like to know more about the subject matter of this tutorial, check out the links below.
-# # #
-# # # * `Word2Vec Paper <https://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrases-and-their-compositionality.pdf>`_
-# # # * `Doc2Vec Paper <https://cs.stanford.edu/~quocle/paragraph_vector.pdf>`_
-# # # * `Dr. Michael D. Lee's Website <http://faculty.sites.uci.edu/mdlee>`_
-# # # * `Lee Corpus <http://faculty.sites.uci.edu/mdlee/similarity-data/>`__
-# # # * `IMDB Doc2Vec Tutorial <doc2vec-IMDB.ipynb>`_
-# # #
-#
