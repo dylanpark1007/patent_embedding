@@ -532,46 +532,46 @@ def tf(flist, ipcdic, n):
                         bufd[wrd1]=bufd[wrd1]+1
                     else:
                         bufd[wrd1]=1
-            # string3 = re.sub("\/[^|]+", "", worksheet.cell_value(row_num, 7))
-            # string3 = string3.replace(" ","")
-            # string3.upper()
-            # string2 = string3.split("|")
-            # for wrd in string2:
-            #     if wrd in bufd:
-            #         bufd[wrd]=bufd[wrd]+1
-            #     else:
-            #         bufd[wrd]=1
-                # if wrd[:4] in bufd:
-                #     bufd[wrd[:4]] = bufd[wrd[:4]] + 1
-                # else:
-                #     bufd[wrd[:4]] = 1
+            string3 = re.sub("\/[^|]+", "", worksheet.cell_value(row_num, 7))
+            string3 = string3.replace(" ","")
+            string3.upper()
+            string2 = string3.split("|")
+            for wrd in string2:
+                if wrd in bufd:
+                    bufd[wrd]=bufd[wrd]+1
+                else:
+                    bufd[wrd]=1
+                if wrd[:4] in bufd:
+                    bufd[wrd[:4]] = bufd[wrd[:4]] + 1
+                else:
+                    bufd[wrd[:4]] = 1
             buf1=list(bufd.keys())
             fq.append(buf1)
-            # fq.append(re.sub("\([^\(]+", "", string))
-            # string = cut(string)
-            # slist = said(string)
-            # string = re.sub("[^가-힣]상기", "", string)
-            # txt1 = m.parse(string)
-            # txt = txt1.split("\n")
-            # for wrd1 in slist:
-            #     if wrd1 in dic:
-            #         buf.append(wrd1)
-            # for word in txt:
-            #     if len(word) > 5:
-            #         # print(word)
-            #         pos = word.split("\t")[1]
-            #         name = word.split("\t")[0]
-            #         name= re.sub("(?<=[가-힣])[\d][^\n]+", "", name)
-            #         if pos.startswith('N') or pos.startswith('SL'):
-            #             if name in dic:
-            #                 buf.append(name)
-            # for wrd in buf:
-            #     buf1.append(dic.index(wrd))
-            # counter = collections.Counter(buf1)
-            # counter1 = counter.most_common()
-            # fq.append(buf1)
-            # for word in counter1:
-            #     hit[word[0]] = hit[word[0]] + 1
+            fq.append(re.sub("\([^\(]+", "", string))
+            string = cut(string)
+            slist = said(string)
+            string = re.sub("[^가-힣]상기", "", string)
+            txt1 = m.parse(string)
+            txt = txt1.split("\n")
+            for wrd1 in slist:
+                if wrd1 in dic:
+                    buf.append(wrd1)
+            for word in txt:
+                if len(word) > 5:
+                    # print(word)
+                    pos = word.split("\t")[1]
+                    name = word.split("\t")[0]
+                    name= re.sub("(?<=[가-힣])[\d][^\n]+", "", name)
+                    if pos.startswith('N') or pos.startswith('SL'):
+                        if name in dic:
+                            buf.append(name)
+            for wrd in buf:
+                buf1.append(dic.index(wrd))
+            counter = collections.Counter(buf1)
+            counter1 = counter.most_common()
+            fq.append(buf1)
+            for word in counter1:
+                hit[word[0]] = hit[word[0]] + 1
         idx=idx+1
     with gzip.open(pick, 'wb') as f:
         pickle.dump(fq, f, pickle.HIGHEST_PROTOCOL)
@@ -732,76 +732,76 @@ if __name__ == "__main__":
     # path = "C:/DB/DB/*"
     file_list = glob.glob(path)
     f_list = [file for file in file_list if file.endswith(".xls")]
-    # f1 = gzip.open("사전(정리).pickle", 'rb')
-    # dic = pickle.load(f1)
-    # f1.close()
-    # f1 = gzip.open("CPC.pickle", 'rb')
-    # cpc = pickle.load(f1)
-    # f1.close()
-    # f1 = gzip.open("DBDB.pickle", 'rb')
-    # DB = pickle.load(f1)
-    # f1.close()
-    # f1 = gzip.open("IPCTREE.pickle", 'rb')
-    # IPTREE = pickle.load(f1)
-    # f1.close()
-    # ipidx=[]
-    # for lst in IPTREE:
-    #     ipidx.append(lst[-1])
-    #
-    # IPdic=dict()
-    #
-    # for i in range(len(ipidx)):
-    #     IPdic[ipidx[i]]=IPTREE[i]
-    # f1 = gzip.open("IPC사전.pickle", 'rb')
-    # IPdic = pickle.load(f1)
-    # f1.close()
+    f1 = gzip.open("사전(정리).pickle", 'rb')
+    dic = pickle.load(f1)
+    f1.close()
+    f1 = gzip.open("CPC.pickle", 'rb')
+    cpc = pickle.load(f1)
+    f1.close()
+    f1 = gzip.open("DBDB.pickle", 'rb')
+    DB = pickle.load(f1)
+    f1.close()
+    f1 = gzip.open("IPCTREE.pickle", 'rb')
+    IPTREE = pickle.load(f1)
+    f1.close()
+    ipidx=[]
+    for lst in IPTREE:
+        ipidx.append(lst[-1])
+    
+    IPdic=dict()
+    
+    for i in range(len(ipidx)):
+        IPdic[ipidx[i]]=IPTREE[i]
+    f1 = gzip.open("IPC사전.pickle", 'rb')
+    IPdic = pickle.load(f1)
+    f1.close()
 
-    # f1 = gzip.open("출원번호.pickle", 'rb')
-    # CN = pickle.load(f1)
-    # f1.close()
+    f1 = gzip.open("출원번호.pickle", 'rb')
+    CN = pickle.load(f1)
+    f1.close()
 
-    # for wrd in CN[:2000]:
-    #     print(wrd, end="")
-    #     print("+", end="")
-    # print("\n")
-    # cplist=["A01B", "A01C", "A01D", "A01F", "A01G", "A01H", "A01J", "A01K", "A01L", "A01M", "A01N", "A21B", "A21C", "A21D", "A22B", "A22C", "A23B", "A23C", "A23D", "A23F", "A23G", "A23J", "A23K", "A23L", "A23B", "A23J", "A23N", "A23P", "A23V", "A23Y", "A24B", "A24C", "A24D", "A24F", "A41B", "A41C", "A41D", "A41F", "A41G", "A41H", "A42B", "A42C", "A43B", "A43C", "A43D", "A44B", "A44C", "A44D", "A45B", "A45C", "A45D", "A45F", "A46B", "A46D", "A47B", "A47C", "A47D", "A47F", "A47G", "A47H", "A47J", "A47K", "A47L", "A61B", "A61C", "A61D", "A61F", "A61G", "A61H", "A61J", "A61K", "A61L", "A61M", "A61N", "A61P", "A61Q", "A62B", "A62C", "A62D", "A63B", "A63C", "A63D", "A63F", "A63G", "A63H", "A63J", "A63K", "A99Z", "B01B", "B01D", "B01F", "B01J", "B01L", "B02B", "B02C", "B03B", "B03C", "B03D", "B04B", "B04C", "B05B", "B05C", "B05D", "B06B", "B07B", "B07C", "B08B", "B09B", "B09C", "B21B", "B21C", "B21D", "B21F", "B21G", "B21H", "B21J", "B21K", "B21L", "B22C", "B22D", "B22F", "B23B", "B23C", "B23D", "B23F", "B23G", "B23H", "B23K", "B23P", "B23Q", "B24B", "B24C", "B24D", "B25B", "B25C", "B25D", "B25F", "B25G", "B25H", "B25J", "B26B", "B26D", "B26F", "B27B", "B27C", "B27D", "B27F", "B27G", "B27H", "B27J", "B27K", "B27L", "B27M", "B27B", "B27L", "B27N", "B28B", "B28C", "B28D", "B29B", "B29C", "B29D", "B29K", "B29D", "B29L", "B29C", "B30B", "B31B", "B31C", "B31D", "B31B", "B31C", "B31F", "B32B", "B33Y", "B41B", "B41C", "B41D", "B41F", "B41G", "B41J", "B41K", "B41L", "B41M", "B41N", "B41P", "B42B", "B42C", "B42D", "B42F", "B42P", "B43K", "B43L", "B43M", "B44B", "B44C", "B44D", "B44F", "B60B", "B60C", "B60D", "B60F", "B60G", "B60H", "B60J", "B60K", "B60L", "B60M", "B60N", "B60P", "B60Q", "B60R", "B60S", "B60T", "B60V", "B60W", "B60Y", "B61B", "B61C", "B61D", "B61F", "B61G", "B61H", "B61J", "B61K", "B61L", "B62B", "B62C", "B62D", "B62H", "B62J", "B62K", "B62L", "B62M", "B63B", "B63C", "B63G", "B63H", "F42B", "B63J", "B64B", "B64C", "B64D", "B64F", "B64G", "B65B", "F42B", "B65D", "B65F", "B65G", "B65H", "B66B", "B66C", "B66D", "B66F", "B67B", "B67C", "B67D", "B68B", "B68C", "B68F", "B68G", "B81B", "B81C", "B82B", "B82Y", "B99Z", "C01B", "C01C", "C01D", "C01F", "C01G", "C01D", "C01F", "C01P", "C02F", "C03B", "C03C", "C04B", "C05B", "C05C", "C05D", "C05B", "C05C", "C05F", "C05B", "C05C", "C05G", "C06B", "C06C", "C06D", "C06F", "C07B", "C07C", "C07D", "C07F", "C07G", "C07H", "C07J", "C07K", "C08B", "C08C", "C08F", "C08G", "C08H", "C08J", "C08B", "C08C", "C08F", "C08G", "C08K", "C08L", "C09B", "C09C", "C09D", "C09F", "C09G", "C09H", "C09J", "C09K", "C10B", "C10C", "C10F", "C10G", "C10H", "C10J", "C10K", "C10L", "C10G", "C10K", "C10M", "C10N", "C10M", "C11B", "C11C", "C11D", "C12C", "C12F", "C12G", "C12G", "C12C", "C12H", "C12H", "C12J", "C12L", "C12M", "C12N", "C12P", "C12Q", "C12R", "C12Y", "C13B", "C13K", "C14B", "C14C", "C21B", "C21C", "C21D", "C22B", "C22C", "C22F", "C23C", "C23D", "C23F", "C21D", "C23G", "C25B", "C25C", "C25D", "C25F", "C30B", "C40B", "C99Z", "C01B", "C01C", "C01D", "C01F", "C01G", "C01D", "C01F", "C01P", "C02F", "C03B", "C03C", "C04B", "C05B", "C05C", "C05D", "C05B", "C05C", "C05F", "C05B", "C05C", "C05G", "C06B", "C06C", "C06D", "C06F", "C07B", "C07C", "C07D", "C07F", "C07G", "C07H", "C07J", "C07K", "C08B", "C08C", "C08F", "C08G", "C08H", "C08J", "C08B", "C08C", "C08F", "C08G", "C08K", "C08L", "C09B", "C09C", "C09D", "C09F", "C09G", "C09H", "C09J", "C09K", "C10B", "C10C", "C10F", "C10G", "C10H", "C10J", "C10K", "C10L", "C10G", "C10K", "C10M", "C10N", "C10M", "C11B", "C11C", "C11D", "C12C", "C12F", "C12G", "C12G", "C12C", "C12H", "C12H", "C12J", "C12L", "C12M", "C12N", "C12P", "C12Q", "C12R", "C12Y", "C13B", "C13K", "C14B", "C14C", "C21B", "C21C", "C21D", "C22B", "C22C", "C22F", "C23C", "C23D", "C23F", "C21D", "C23G", "C25B", "C25C", "C25D", "C25F", "C30B", "C40B", "C99Z", "D01B", "D01C", "D01D", "D01F", "D01G", "D01H", "D02G", "D02H", "D02J", "D03C", "D03D", "D03J", "D04B", "D04C", "D04D", "D04G", "D04H", "D05B", "D05C", "D05D", "D05B", "D05C", "D06B", "D06C", "D06F", "D06G", "D06H", "D06J", "D06L", "D06M", "D06N", "D06P", "D06Q", "D07B", "D10B", "D21B", "D21C", "D21D", "D21F", "D21G", "D21H", "D21C", "D21D", "D21G", "D21J", "D99Z", "E01B", "E01C", "E01D", "E01F", "E01H", "E02B", "E02C", "E02D", "E02F", "E03B", "E03C", "E03D", "E03F", "E04B", "E04C", "E04D", "E04F", "E04G", "E04H", "E05B", "E05C", "E05D", "E05F", "E05G", "E05Y", "E06B", "E06C", "E21B", "E21C", "E21D", "E21F", "E99Z", "F01B", "F01C", "F01D", "F01K", "F01L", "F01M", "F01N", "F01P", "F02B", "F02C", "F02D", "F02F", "F02G", "F02K", "F02M", "F02N", "F02P", "F03B", "F03C", "F03D", "F03G", "F03H", "F04B", "F04C", "F04D", "F04F", "F05B", "F05C", "F05D", "F15B", "F15C", "F15D", "F16B", "F16C", "F16D", "B61H", "B62L", "F16F", "F16G", "F16H", "F16J", "F16K", "F16L", "F16M", "F16N", "F16P", "F16S", "F16T", "F17B", "F17C", "F17D", "F21H", "F21K", "F21L", "F21S", "F21V", "F21W", "F21K", "F21L", "F21S", "F21V", "F21Y", "F21K", "F21L", "F21S", "F21V", "F22B", "F22D", "F22G", "F23B", "F23C", "F23D", "F23G", "F23H", "F23J", "F23K", "F23L", "F23M", "F23N", "F23Q", "F23R", "F24B", "F24C", "F24D", "F24F", "F24H", "F24S", "F24T", "F24V", "F25B", "F25C", "F25D", "F25J", "F26B", "F27B", "F27D", "F27M", "F28B", "F28C", "F28D", "F28F", "F28G", "F41A", "F41B", "F41C", "F41F", "F41G", "F41H", "F41J", "F42B", "F42C", "F42D", "F99Z", "G01B", "G01C", "G01D", "G01F", "G01G", "G01H", "G01J", "G01K", "G01L", "G01M", "G01N", "G01P", "G01Q", "G01R", "G01S", "G01T", "G01V", "G01W", "G02B", "G02C", "G02F", "G03B", "G03C", "G03D", "G03F", "G03G", "G03H", "G04B", "G04C", "G04D", "G04F", "G04G", "G04R", "G05B", "G05D", "G05F", "G05G", "G06C", "G06D", "G06E", "G06F", "G06G", "G06J", "G06K", "G06M", "G06N", "G06Q", "G06T", "G07B", "G07C", "G07D", "G07F", "G07G", "G08B", "G08C", "G08G", "G09B", "G09C", "G09D", "G09F", "G09G", "G10B", "G10C", "G10D", "G10F", "G10G", "G10H", "G10K", "G10L", "G11B", "G11C", "G12B", "G16B", "G16C", "G16H", "G16Y", "G16Z", "G21B", "G21C", "G21D", "G21F", "G21G", "G21H", "G21J", "G21K", "G99Z", "H01B", "H01C", "H01F", "H01G", "H01H", "H01J", "H01K", "H01L", "H01M", "H01P", "H01Q", "H01R", "H01S", "H01T", "H02B", "H02G", "H02H", "H02J", "H02K", "H02M", "H02N", "H02P", "H02S", "H03B", "H03C", "H03D", "H03F", "H03G", "H03H", "H03J", "H03K", "H03L", "H03M", "H04B", "H04H", "H04J", "H04K", "H04L", "H04M", "H04N", "H04Q", "H04R", "H04S", "H04T", "H04W", "H05B", "H05C", "H05F", "H05G", "H05H", "H05K", "H99Z", "Y02A", "Y02B", "Y02C", "Y02D", "Y02E", "Y02P", "Y02T", "Y02W", "Y04S", "Y10S", "Y10T", "Z01B", "Z01C", "Z01I", "Z01T", "Z03A", "Z03C", "Z03D", "Z03H", "Z03M", "Z03R", "Z03V", "Z05E", "Z05M", "Z05P", "Z05S"]
-    # tk=[]
-    # for i in range(9):
-    #     print(i)
-    #     txt = "INF[" + str(i) + "].pickle"
-    #     f1=gzip.open(txt, 'rb')
-    #     tk=tk+pickle.load(f1)
-    #     f1.close()
-    #
-    # model = gensim.models.doc2vec.Doc2Vec.load("doc2vec[라].model")
-    # wrd = dic.most_common()
-    # wrd1 = sorted(wrd, key=itemgetter(1), reverse=False)
-    # wrd2 = wrd[:100000]
-    # g = open("사전점검.txt", "w", encoding="utf-8")
-    # for wo in wrd2:
-    #     g.write(wo[1])
-    #     g.write("\t")
-    #     g.write(str(wo[2]))
-    #     g.write("\n")
-    # g.close()
+    for wrd in CN[:2000]:
+        print(wrd, end="")
+        print("+", end="")
+    print("\n")
+    cplist=["A01B", "A01C", "A01D", "A01F", "A01G", "A01H", "A01J", "A01K", "A01L", "A01M", "A01N", "A21B", "A21C", "A21D", "A22B", "A22C", "A23B", "A23C", "A23D", "A23F", "A23G", "A23J", "A23K", "A23L", "A23B", "A23J", "A23N", "A23P", "A23V", "A23Y", "A24B", "A24C", "A24D", "A24F", "A41B", "A41C", "A41D", "A41F", "A41G", "A41H", "A42B", "A42C", "A43B", "A43C", "A43D", "A44B", "A44C", "A44D", "A45B", "A45C", "A45D", "A45F", "A46B", "A46D", "A47B", "A47C", "A47D", "A47F", "A47G", "A47H", "A47J", "A47K", "A47L", "A61B", "A61C", "A61D", "A61F", "A61G", "A61H", "A61J", "A61K", "A61L", "A61M", "A61N", "A61P", "A61Q", "A62B", "A62C", "A62D", "A63B", "A63C", "A63D", "A63F", "A63G", "A63H", "A63J", "A63K", "A99Z", "B01B", "B01D", "B01F", "B01J", "B01L", "B02B", "B02C", "B03B", "B03C", "B03D", "B04B", "B04C", "B05B", "B05C", "B05D", "B06B", "B07B", "B07C", "B08B", "B09B", "B09C", "B21B", "B21C", "B21D", "B21F", "B21G", "B21H", "B21J", "B21K", "B21L", "B22C", "B22D", "B22F", "B23B", "B23C", "B23D", "B23F", "B23G", "B23H", "B23K", "B23P", "B23Q", "B24B", "B24C", "B24D", "B25B", "B25C", "B25D", "B25F", "B25G", "B25H", "B25J", "B26B", "B26D", "B26F", "B27B", "B27C", "B27D", "B27F", "B27G", "B27H", "B27J", "B27K", "B27L", "B27M", "B27B", "B27L", "B27N", "B28B", "B28C", "B28D", "B29B", "B29C", "B29D", "B29K", "B29D", "B29L", "B29C", "B30B", "B31B", "B31C", "B31D", "B31B", "B31C", "B31F", "B32B", "B33Y", "B41B", "B41C", "B41D", "B41F", "B41G", "B41J", "B41K", "B41L", "B41M", "B41N", "B41P", "B42B", "B42C", "B42D", "B42F", "B42P", "B43K", "B43L", "B43M", "B44B", "B44C", "B44D", "B44F", "B60B", "B60C", "B60D", "B60F", "B60G", "B60H", "B60J", "B60K", "B60L", "B60M", "B60N", "B60P", "B60Q", "B60R", "B60S", "B60T", "B60V", "B60W", "B60Y", "B61B", "B61C", "B61D", "B61F", "B61G", "B61H", "B61J", "B61K", "B61L", "B62B", "B62C", "B62D", "B62H", "B62J", "B62K", "B62L", "B62M", "B63B", "B63C", "B63G", "B63H", "F42B", "B63J", "B64B", "B64C", "B64D", "B64F", "B64G", "B65B", "F42B", "B65D", "B65F", "B65G", "B65H", "B66B", "B66C", "B66D", "B66F", "B67B", "B67C", "B67D", "B68B", "B68C", "B68F", "B68G", "B81B", "B81C", "B82B", "B82Y", "B99Z", "C01B", "C01C", "C01D", "C01F", "C01G", "C01D", "C01F", "C01P", "C02F", "C03B", "C03C", "C04B", "C05B", "C05C", "C05D", "C05B", "C05C", "C05F", "C05B", "C05C", "C05G", "C06B", "C06C", "C06D", "C06F", "C07B", "C07C", "C07D", "C07F", "C07G", "C07H", "C07J", "C07K", "C08B", "C08C", "C08F", "C08G", "C08H", "C08J", "C08B", "C08C", "C08F", "C08G", "C08K", "C08L", "C09B", "C09C", "C09D", "C09F", "C09G", "C09H", "C09J", "C09K", "C10B", "C10C", "C10F", "C10G", "C10H", "C10J", "C10K", "C10L", "C10G", "C10K", "C10M", "C10N", "C10M", "C11B", "C11C", "C11D", "C12C", "C12F", "C12G", "C12G", "C12C", "C12H", "C12H", "C12J", "C12L", "C12M", "C12N", "C12P", "C12Q", "C12R", "C12Y", "C13B", "C13K", "C14B", "C14C", "C21B", "C21C", "C21D", "C22B", "C22C", "C22F", "C23C", "C23D", "C23F", "C21D", "C23G", "C25B", "C25C", "C25D", "C25F", "C30B", "C40B", "C99Z", "C01B", "C01C", "C01D", "C01F", "C01G", "C01D", "C01F", "C01P", "C02F", "C03B", "C03C", "C04B", "C05B", "C05C", "C05D", "C05B", "C05C", "C05F", "C05B", "C05C", "C05G", "C06B", "C06C", "C06D", "C06F", "C07B", "C07C", "C07D", "C07F", "C07G", "C07H", "C07J", "C07K", "C08B", "C08C", "C08F", "C08G", "C08H", "C08J", "C08B", "C08C", "C08F", "C08G", "C08K", "C08L", "C09B", "C09C", "C09D", "C09F", "C09G", "C09H", "C09J", "C09K", "C10B", "C10C", "C10F", "C10G", "C10H", "C10J", "C10K", "C10L", "C10G", "C10K", "C10M", "C10N", "C10M", "C11B", "C11C", "C11D", "C12C", "C12F", "C12G", "C12G", "C12C", "C12H", "C12H", "C12J", "C12L", "C12M", "C12N", "C12P", "C12Q", "C12R", "C12Y", "C13B", "C13K", "C14B", "C14C", "C21B", "C21C", "C21D", "C22B", "C22C", "C22F", "C23C", "C23D", "C23F", "C21D", "C23G", "C25B", "C25C", "C25D", "C25F", "C30B", "C40B", "C99Z", "D01B", "D01C", "D01D", "D01F", "D01G", "D01H", "D02G", "D02H", "D02J", "D03C", "D03D", "D03J", "D04B", "D04C", "D04D", "D04G", "D04H", "D05B", "D05C", "D05D", "D05B", "D05C", "D06B", "D06C", "D06F", "D06G", "D06H", "D06J", "D06L", "D06M", "D06N", "D06P", "D06Q", "D07B", "D10B", "D21B", "D21C", "D21D", "D21F", "D21G", "D21H", "D21C", "D21D", "D21G", "D21J", "D99Z", "E01B", "E01C", "E01D", "E01F", "E01H", "E02B", "E02C", "E02D", "E02F", "E03B", "E03C", "E03D", "E03F", "E04B", "E04C", "E04D", "E04F", "E04G", "E04H", "E05B", "E05C", "E05D", "E05F", "E05G", "E05Y", "E06B", "E06C", "E21B", "E21C", "E21D", "E21F", "E99Z", "F01B", "F01C", "F01D", "F01K", "F01L", "F01M", "F01N", "F01P", "F02B", "F02C", "F02D", "F02F", "F02G", "F02K", "F02M", "F02N", "F02P", "F03B", "F03C", "F03D", "F03G", "F03H", "F04B", "F04C", "F04D", "F04F", "F05B", "F05C", "F05D", "F15B", "F15C", "F15D", "F16B", "F16C", "F16D", "B61H", "B62L", "F16F", "F16G", "F16H", "F16J", "F16K", "F16L", "F16M", "F16N", "F16P", "F16S", "F16T", "F17B", "F17C", "F17D", "F21H", "F21K", "F21L", "F21S", "F21V", "F21W", "F21K", "F21L", "F21S", "F21V", "F21Y", "F21K", "F21L", "F21S", "F21V", "F22B", "F22D", "F22G", "F23B", "F23C", "F23D", "F23G", "F23H", "F23J", "F23K", "F23L", "F23M", "F23N", "F23Q", "F23R", "F24B", "F24C", "F24D", "F24F", "F24H", "F24S", "F24T", "F24V", "F25B", "F25C", "F25D", "F25J", "F26B", "F27B", "F27D", "F27M", "F28B", "F28C", "F28D", "F28F", "F28G", "F41A", "F41B", "F41C", "F41F", "F41G", "F41H", "F41J", "F42B", "F42C", "F42D", "F99Z", "G01B", "G01C", "G01D", "G01F", "G01G", "G01H", "G01J", "G01K", "G01L", "G01M", "G01N", "G01P", "G01Q", "G01R", "G01S", "G01T", "G01V", "G01W", "G02B", "G02C", "G02F", "G03B", "G03C", "G03D", "G03F", "G03G", "G03H", "G04B", "G04C", "G04D", "G04F", "G04G", "G04R", "G05B", "G05D", "G05F", "G05G", "G06C", "G06D", "G06E", "G06F", "G06G", "G06J", "G06K", "G06M", "G06N", "G06Q", "G06T", "G07B", "G07C", "G07D", "G07F", "G07G", "G08B", "G08C", "G08G", "G09B", "G09C", "G09D", "G09F", "G09G", "G10B", "G10C", "G10D", "G10F", "G10G", "G10H", "G10K", "G10L", "G11B", "G11C", "G12B", "G16B", "G16C", "G16H", "G16Y", "G16Z", "G21B", "G21C", "G21D", "G21F", "G21G", "G21H", "G21J", "G21K", "G99Z", "H01B", "H01C", "H01F", "H01G", "H01H", "H01J", "H01K", "H01L", "H01M", "H01P", "H01Q", "H01R", "H01S", "H01T", "H02B", "H02G", "H02H", "H02J", "H02K", "H02M", "H02N", "H02P", "H02S", "H03B", "H03C", "H03D", "H03F", "H03G", "H03H", "H03J", "H03K", "H03L", "H03M", "H04B", "H04H", "H04J", "H04K", "H04L", "H04M", "H04N", "H04Q", "H04R", "H04S", "H04T", "H04W", "H05B", "H05C", "H05F", "H05G", "H05H", "H05K", "H99Z", "Y02A", "Y02B", "Y02C", "Y02D", "Y02E", "Y02P", "Y02T", "Y02W", "Y04S", "Y10S", "Y10T", "Z01B", "Z01C", "Z01I", "Z01T", "Z03A", "Z03C", "Z03D", "Z03H", "Z03M", "Z03R", "Z03V", "Z05E", "Z05M", "Z05P", "Z05S"]
+    tk=[]
+    for i in range(9):
+        print(i)
+        txt = "INF[" + str(i) + "].pickle"
+        f1=gzip.open(txt, 'rb')
+        tk=tk+pickle.load(f1)
+        f1.close()
+    
+    model = gensim.models.doc2vec.Doc2Vec.load("doc2vec[라].model")
+    wrd = dic.most_common()
+    wrd1 = sorted(wrd, key=itemgetter(1), reverse=False)
+    wrd2 = wrd[:100000]
+    g = open("사전점검.txt", "w", encoding="utf-8")
+    for wo in wrd2:
+        g.write(wo[1])
+        g.write("\t")
+        g.write(str(wo[2]))
+        g.write("\n")
+    g.close()
 
 
-    # cnt=0
-    # for wrd in sorted_C:
-    #     print(cnt)
-    #     if wrd[1] == 10:
-    #         break
-    #     cnt=cnt+1
+    cnt=0
+    for wrd in sorted_C:
+        print(cnt)
+        if wrd[1] == 10:
+            break
+        cnt=cnt+1
+    
+    nlist = sorted_C[cnt:]
+    nlist = sorted(nlist, key=itemgetter(1), reverse=True)
+    
+    dic = []
+    for wrd in nlist:
+        dic.append(wrd[0])
     #
-    # nlist = sorted_C[cnt:]
-    # nlist = sorted(nlist, key=itemgetter(1), reverse=True)
-    #
-    # dic = []
-    # for wrd in nlist:
-    #     dic.append(wrd[0])
-    # #
-    # with gzip.open('CPlist.pickle', 'wb') as f:
-    #     pickle.dump(cclist, f, pickle.HIGHEST_PROTOCOL)
+    with gzip.open('CPlist.pickle', 'wb') as f:
+        pickle.dump(cclist, f, pickle.HIGHEST_PROTOCOL)
 
     j = 10
     l = int(860 / j)
@@ -830,189 +830,189 @@ if __name__ == "__main__":
     with gzip.open('IPC[파].pickle', 'wb') as f:
         pickle.dump(IPC, f, pickle.HIGHEST_PROTOCOL)
 
-    # for lst in DB:
-    #     print(DB5.index(lst[0]))
-    #
-    #
-    # CPC=[]
-    # count=0
-    # for num in CN3:
-    #     if count%1000 ==0:
-    #         print(count)
-    #     count=count+1
-    #     if num not in SET3:
-    #         CP=DB5[CN2.index(num)][6]
-    #         CPC.append(CP)
-    #     else:
-    #         CPC.append("")
+    for lst in DB:
+        print(DB5.index(lst[0]))
+    
+    
+    CPC=[]
+    count=0
+    for num in CN3:
+        if count%1000 ==0:
+            print(count)
+        count=count+1
+        if num not in SET3:
+            CP=DB5[CN2.index(num)][6]
+            CPC.append(CP)
+        else:
+            CPC.append("")
 
-    #
-    # c=0
-    # IPDICT=dict()
-    # for doc in IPTRR:
-    #     if c%100 ==0:
-    #         print(c)
-    #     c=c+1
-    #     for tag in doc:
-    #         if tag in IPDICT:
-    #             IPDICT[tag]=IPDICT[tag]+1
-    #         else:
-    #             IPDICT[tag]=1
-    #
-    # IPLST=list(IPDICT.itmes())
-    # IPLST2 = sorted(IPLST, key=itemgetter(1), reverse=False)
+    
+    c=0
+    IPDICT=dict()
+    for doc in IPTRR:
+        if c%100 ==0:
+            print(c)
+        c=c+1
+        for tag in doc:
+            if tag in IPDICT:
+                IPDICT[tag]=IPDICT[tag]+1
+            else:
+                IPDICT[tag]=1
+    
+    IPLST=list(IPDICT.itmes())
+    IPLST2 = sorted(IPLST, key=itemgetter(1), reverse=False)
 
-    # # s=""
-    # # tu=[]
-    # g = open("TIlist.txt", "w", encoding="utf-8")
-    # for doc in tk:
-    #     g.write(doc)
-    #     g.write("\n")
-    # g.close()
-    # for i,doc in enumerate(tk):
-    #     s=""
-    #     tdic=dict()
-    #     # s = ' '.join(str(x) for x in doc)
-    #     tu=doc.split("|")
-    #     for unit in tu:
-    #         if unit[:3] in tdic:
-    #             tdic[unit[:3]]=tdic[unit[:3]]+1
-    #         else:
-    #             tdic[unit[:3]] = 1
-    #     c=list(tdic.keys())
-    #     if len(c) != 0:
-    #         s = " ".join(c)
-    #     g.write(s)
-    #     g.write("\n")
-    #     print(i)
-    # g.close()
-    #
+    # s=""
+    # tu=[]
+    g = open("TIlist.txt", "w", encoding="utf-8")
+    for doc in tk:
+        g.write(doc)
+        g.write("\n")
+    g.close()
+    for i,doc in enumerate(tk):
+        s=""
+        tdic=dict()
+        # s = ' '.join(str(x) for x in doc)
+        tu=doc.split("|")
+        for unit in tu:
+            if unit[:3] in tdic:
+                tdic[unit[:3]]=tdic[unit[:3]]+1
+            else:
+                tdic[unit[:3]] = 1
+        c=list(tdic.keys())
+        if len(c) != 0:
+            s = " ".join(c)
+        g.write(s)
+        g.write("\n")
+        print(i)
+    g.close()
+    
 
-    # dic2=[]
-    # for i in range(10):
-    #     dic2.append(collections.Counter(dic1[i]))
-    # dic3=dic2[0]+dic2[1]+dic2[2]+dic2[3]+dic2[4]+dic2[5]+dic2[6]+dic2[7]+dic2[8]
-    #
-    # with open('사전(3M).pickle', 'wb') as f:
-    #     pickle.dump(dic3, f, pickle.HIGHEST_PROTOCOL)
-    # w3 = []
-    # w5 = []
-    # w6 = []
-    # word3=[]
-    # ddic1=dict()
-    # for word2 in ddic.keys():
-    #     word4=re.sub("제[\d]{1,2}", "", word2)
-    #     word4=re.sub("[^가-힣]","",word4)
-    #     if len(word4) > 2 and len(word4) <7:
-    #         if word4 in ddic1:
-    #             ddic1[word4]=ddic1[word4]+1
-    #         else:
-    #             ddic1[word4]=1
-    #
-    # word3=list(ddic1.keys())
-    # for word5 in word3:
-    #     if len(word5) == 3:
-    #         w3.append(word5)
-    #     elif len(word5) == 5:
-    #         w5.append(word5)
-    #     elif len(word5) == 6:
-    #         w6.append(word5)
-    #     else:
-    #         continue
-    #
-    # word3.sort(key=len, reverse=False)
-    # print(len(word3))
-    #
-    # w2=snoun1(w3, w5)
-    # t1=snoun(word3)
-    # print(len(t1))
-    #
-    # f2=open("sample1.txt", "r", encoding="utf-8")
-    #
-    # with open("sample2.txt", 'w', encoding="utf-8") as g:
-    #     for i in range(7719):
-    #         string2=f2.readline()[:-1]
-    #         string3=m.parse(string2)
-    #         g.write(string2)
-    #         g.write("\n")
-    #         g.write(string3)
-    #         g.write("\n")
-    #     g.close()
+    dic2=[]
+    for i in range(10):
+        dic2.append(collections.Counter(dic1[i]))
+    dic3=dic2[0]+dic2[1]+dic2[2]+dic2[3]+dic2[4]+dic2[5]+dic2[6]+dic2[7]+dic2[8]
+    
+    with open('사전(3M).pickle', 'wb') as f:
+        pickle.dump(dic3, f, pickle.HIGHEST_PROTOCOL)
+    w3 = []
+    w5 = []
+    w6 = []
+    word3=[]
+    ddic1=dict()
+    for word2 in ddic.keys():
+        word4=re.sub("제[\d]{1,2}", "", word2)
+        word4=re.sub("[^가-힣]","",word4)
+        if len(word4) > 2 and len(word4) <7:
+            if word4 in ddic1:
+                ddic1[word4]=ddic1[word4]+1
+            else:
+                ddic1[word4]=1
+    
+    word3=list(ddic1.keys())
+    for word5 in word3:
+        if len(word5) == 3:
+            w3.append(word5)
+        elif len(word5) == 5:
+            w5.append(word5)
+        elif len(word5) == 6:
+            w6.append(word5)
+        else:
+            continue
+    
+    word3.sort(key=len, reverse=False)
+    print(len(word3))
+    
+    w2=snoun1(w3, w5)
+    t1=snoun(word3)
+    print(len(t1))
+    
+    f2=open("sample1.txt", "r", encoding="utf-8")
+    
+    with open("sample2.txt", 'w', encoding="utf-8") as g:
+        for i in range(7719):
+            string2=f2.readline()[:-1]
+            string3=m.parse(string2)
+            g.write(string2)
+            g.write("\n")
+            g.write(string3)
+            g.write("\n")
+        g.close()
 
-    # par(f_list[880:888], 8)
+    par(f_list[880:888], 8)
 
 
 
-    # with gzip.open("FQ[new].pickle", 'wb') as f:
-    #     pickle.dump(fq, f, pickle.HIGHEST_PROTOCOL)
-    # with gzip.open("HIT[new].pickle", 'wb') as f:
-    #     pickle.dump(hit, f, pickle.HIGHEST_PROTOCOL)
-    # with gzip.open("TFIDF[new].pickle", 'wb') as f:
-    #     pickle.dump(hit, f, pickle.HIGHEST_PROTOCOL)
-    # with gzip.open("B[new].pickle", 'wb') as f:
-    #     pickle.dump(b, f, pickle.HIGHEST_PROTOCOL)
+    with gzip.open("FQ[new].pickle", 'wb') as f:
+        pickle.dump(fq, f, pickle.HIGHEST_PROTOCOL)
+    with gzip.open("HIT[new].pickle", 'wb') as f:
+        pickle.dump(hit, f, pickle.HIGHEST_PROTOCOL)
+    with gzip.open("TFIDF[new].pickle", 'wb') as f:
+        pickle.dump(hit, f, pickle.HIGHEST_PROTOCOL)
+    with gzip.open("B[new].pickle", 'wb') as f:
+        pickle.dump(b, f, pickle.HIGHEST_PROTOCOL)
 
-    # f1 = gzip.open("사전(정리).pickle", 'rb')
-    # dic = pickle.load(f1)
-    # f1.close()
-    # f1=gzip.open("HIT[new].pickle", 'rb')
-    # hit=pickle.load(f1)
-    # f1.close()
-    # f2=gzip.open("B[new].pickle", 'rb')
-    # tfidf=pickle.load(f2)
-    # f2.close()
-    #     dic1.append(pickle.load(f1))
+    f1 = gzip.open("사전(정리).pickle", 'rb')
+    dic = pickle.load(f1)
+    f1.close()
+    f1=gzip.open("HIT[new].pickle", 'rb')
+    hit=pickle.load(f1)
+    f1.close()
+    f2=gzip.open("B[new].pickle", 'rb')
+    tfidf=pickle.load(f2)
+    f2.close()
+        dic1.append(pickle.load(f1))
 
-    # log = []
-    # for n in range(len(dic)):
-    #     log.append(round(math.log10(4435880/(hit[n]+1)), 6))
+    log = []
+    for n in range(len(dic)):
+        log.append(round(math.log10(4435880/(hit[n]+1)), 6))
 
-    # tfidf = []
-    # c=0
-    # for line in fq:
-    #     print(c)
-    #     v1 = []
-    #     for pair in line:
-    #         v1.append([pair[0], round(pair[1] * log[pair[0]], 6)])
-    #         c=c+1
-    #     tfidf.append(v1)
-    # cpc1=[]
-    #
-    # cdic2=dict()
-    # for doc in cpc:
-    #     cdic1 = dict()
-    #     for item in doc:
-    #         if item in cdic1:
-    #             cdic1[item]=cdic1[item]+1
-    #         else:
-    #             cdic1[item]=0
-    #     slist = list(cdic1.keys())
-    #     cpc1.append(slist)
-    #     for item in slist:
-    #         if item in cdic2:
-    #             cdic2[item]=cdic2[item]+1
-    #         else:
-    #             cdic2[item]=0
-    #
-    # wrd3 = collections.Counter(cdic2)
-    # wrd=wrd3.most_common()
-    # # slist2=list(cdic.keys())
-    # # wrd1 = sorted(wrd, key=itemgetter(1), reverse=False)
-    #
-    # wrd4 = wrd[:-20]
-    # cpclist = []
-    # cclist=[]
-    # for item in wrd4:
-    #     cpclist.append(item[0])
-    # #
-    # # f2 = open("CPlist.txt", "w", encoding="utf-8")
-    # cclist = []
-    # for doc in cpc1:
-    #     buf=[]
-    #     for item in doc:
-    #         if item in cpclist:
-    #             buf.append(cpclist.index(item))
-    #     if len(buf)!=0:
-    #         cclist.append(cpclist[min(buf)])
-    #     else:
-    #         cclist.append("")
+    tfidf = []
+    c=0
+    for line in fq:
+        print(c)
+        v1 = []
+        for pair in line:
+            v1.append([pair[0], round(pair[1] * log[pair[0]], 6)])
+            c=c+1
+        tfidf.append(v1)
+    cpc1=[]
+    
+    cdic2=dict()
+    for doc in cpc:
+        cdic1 = dict()
+        for item in doc:
+            if item in cdic1:
+                cdic1[item]=cdic1[item]+1
+            else:
+                cdic1[item]=0
+        slist = list(cdic1.keys())
+        cpc1.append(slist)
+        for item in slist:
+            if item in cdic2:
+                cdic2[item]=cdic2[item]+1
+            else:
+                cdic2[item]=0
+    
+    wrd3 = collections.Counter(cdic2)
+    wrd=wrd3.most_common()
+    slist2=list(cdic.keys())
+    wrd1 = sorted(wrd, key=itemgetter(1), reverse=False)
+    
+    wrd4 = wrd[:-20]
+    cpclist = []
+    cclist=[]
+    for item in wrd4:
+        cpclist.append(item[0])
+    
+    f2 = open("CPlist.txt", "w", encoding="utf-8")
+    cclist = []
+    for doc in cpc1:
+        buf=[]
+        for item in doc:
+            if item in cpclist:
+                buf.append(cpclist.index(item))
+        if len(buf)!=0:
+            cclist.append(cpclist[min(buf)])
+        else:
+            cclist.append("")
